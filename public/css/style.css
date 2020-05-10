@@ -1,0 +1,29 @@
+html,
+body {
+    height: 100%;
+}
+
+body {
+    background-color : #1b262c !important;
+}
+
+.container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.box {
+    padding: 70px 50px;
+    width: 70%;
+    border: 1px solid #ffffff !important;
+}
+
+.link-holder {
+    border-radius: 0% !important;
+}
+
+.modal {
+    background-color: rgba(22, 22, 22, 0.466);
+}
