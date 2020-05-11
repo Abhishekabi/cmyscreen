@@ -5,7 +5,7 @@ var screenShareHandler = {};
 var screenShareConstants = {};
 
 screenShareConstants = {
-  screenCaptureInterval: 2000,
+  screenCaptureInterval: 1000,
   pullAnswerInterval: 2000,
   imageHeight: 768
 }
@@ -96,8 +96,10 @@ screenShareSession.prototype = {
     this._peerConnection.setRemoteDescription("answer", answer, JSON.parse(iceCandidates.pop()));
     iceCandidates.forEach(function (candidate) {
       candidate = JSON.parse(candidate);
-      if (typeof setRemoteIceCandidate === "function")
-        this._peerConnection.setRemoteIceCandidate(candidate);
+      setTimeout(function () {
+        if (typeof this._peerConnection.setRemoteIceCandidate === "function")
+          this._peerConnection.setRemoteIceCandidate(candidate);
+      }.bind(this), 1000);
     }.bind(this));
   },
 

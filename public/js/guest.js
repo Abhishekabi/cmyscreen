@@ -28,8 +28,10 @@ guestSession.prototype = {
     updateRemoteCandidates: function () {
         this._iceCandidates.forEach(function (candidate) {
             candidate = JSON.parse(candidate);
-            if (typeof setRemoteIceCandidate === "function")
-                this._peerConnection.setRemoteIceCandidate(candidate);
+            setTimeout(function () {
+                if (typeof this._peerConnection.setRemoteIceCandidate === "function")
+                    this._peerConnection.setRemoteIceCandidate(candidate);
+            }.bind(this), 1000);
         }.bind(this));
     },
 
@@ -103,7 +105,10 @@ guestSessionHandler = {
 
     UIEvents: {
         viewScreen: function (elem) {
-
+            var guestName = $('#guestname').val();
+            if (!$Util.isEmpty(guestName)) {
+                $('#welcomemodal').removeClass('show');
+            }
         }
     },
 
