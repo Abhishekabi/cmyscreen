@@ -144,7 +144,7 @@ guestSessionImpl = {
             event.stopPropagation();
             var elem = $(this);
             var purpose = elem.attr("purpose");
-            screenShareHandler.UIEvents[purpose](elem);
+            guestSessionHandler.UIEvents[purpose](elem);
         });
     },
 
