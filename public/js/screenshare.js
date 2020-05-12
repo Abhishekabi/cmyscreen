@@ -95,11 +95,7 @@ screenShareSession.prototype = {
     this._isAnswerApplied = true;
     this._peerConnection.setRemoteDescription("answer", answer, JSON.parse(iceCandidates.pop()));
     iceCandidates.forEach(function (candidate) {
-      candidate = JSON.parse(candidate);
-      setTimeout(function () {
-        if (typeof this._peerConnection.setRemoteIceCandidate === "function")
-          this._peerConnection.setRemoteIceCandidate(candidate);
-      }.bind(this), 1000);
+      this._peerConnection._connection.addIceCandidate(new RTCIceCandidate(JSON.parse(candidate)));
     }.bind(this));
   },
 
