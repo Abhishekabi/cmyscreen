@@ -26,13 +26,9 @@ guestSession.prototype = {
     },
 
     updateRemoteCandidates: function () {
-        this._iceCandidates.forEach(function (candidate) {
-            candidate = JSON.parse(candidate);
-            setTimeout(function () {
-                if (typeof this._peerConnection.setRemoteIceCandidate === "function")
-                    this._peerConnection.setRemoteIceCandidate(candidate);
-            }.bind(this), 1000);
-        }.bind(this));
+      this._iceCandidates.forEach(function (candidate) {
+        this._peerConnection._connection.addIceCandidate(new RTCIceCandidate(JSON.parse(candidate)));
+      }.bind(this));
     },
 
     getId: function () {
