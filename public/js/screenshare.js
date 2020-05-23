@@ -29,9 +29,7 @@ screenShareSession.prototype = {
   initialize: function () {
     var turnCredentials = $Util.getTurnCredentials();
     this._peerConnection = new webRTCPeerConnection(this._userId, screenShareHandler.peerConnectionEvents, turnCredentials, true);
-    this._pullAnswerTimer = setInterval(function () {
-      screenShareAPI.pullAnswer(this._userId);
-    }.bind(this), screenShareConstants.pullAnswerInterval);
+    this.startPullAnswerTimer();
   },
 
   getUserId: function () {
@@ -52,6 +50,12 @@ screenShareSession.prototype = {
 
   setScreenContainer: function (screenContainer) {
     this._screenContainer = screenContainer;
+  },
+
+  startPullAnswerTimer: function () {
+    this._pullAnswerTimer = setInterval(function () {
+      screenShareAPI.pullData(this._userId, "answer");
+    }.bind(this), screenShareConstants.pullAnswerInterval);
   },
 
   clearPullAnswerTimer: function () {
@@ -100,6 +104,7 @@ screenShareSession.prototype = {
   },
 
   close: function () {
+    this.clearPullAnswerTimer();
     this._peerConnection.close();
     this._peerConnection = undefined;
   }
@@ -302,8 +307,10 @@ screenShareImpl = {
   },
 
   endSession: function () {
-    screenShareAPI.end(this._currentSession.getUserId())
-    this._currentSession.close();
+    if (screenShareImpl.hasCurrentSession()) {
+      screenShareAPI.end(this._currentSession.getUserId());
+      this._currentSession.close();
+    }
     this._currentSession = undefined;
     this._screenStream = undefined;
   }
