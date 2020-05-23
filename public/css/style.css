@@ -15,7 +15,7 @@ body {
 }
 
 .box {
-    padding: 70px 50px;
+    padding: 30px 50px 30px 50px;
     width: 70%;
     border: 1px solid #ffffff !important;
 }
@@ -26,4 +26,9 @@ body {
 
 .modal {
     background-color: rgba(22, 22, 22, 0.466);
+}
+
+.infoTxt {
+    justify-content: center;
+    margin-top: 30px;
 }

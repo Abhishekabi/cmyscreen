@@ -3,11 +3,19 @@ var screenShareImpl = {};
 var screenShareAPI = {};
 var screenShareHandler = {};
 var screenShareConstants = {};
+var screenShareUI = {};
 
 screenShareConstants = {
+  stateClass: {
+    SUCCESS: 'text-success',
+    ERROR: 'text-danger',
+    INFO: 'text-info',
+    WARNING: 'text-warning'
+  },
+
   screenCaptureInterval: 1000,
   pullAnswerInterval: 2000,
-  imageHeight: 768
+  imageHeight: 768,
 }
 
 screenShareSession = function (userId, userName, guestUrl) {
@@ -54,7 +62,7 @@ screenShareSession.prototype = {
 
   startPullAnswerTimer: function () {
     this._pullAnswerTimer = setInterval(function () {
-      screenShareAPI.pullData(this._userId, "answer");
+      screenShareAPI.pullAnswer(this._userId);
     }.bind(this), screenShareConstants.pullAnswerInterval);
   },
 
@@ -168,6 +176,7 @@ screenShareAPI = {
       dataType: "json",
       success: function (resp) {
         if (resp) {
+          screenShareUI.addInfoMessage(screenShareConstants.stateClass.WARNING, 'A guest user has joined this session')
           var screenShareSession = screenShareImpl.getCurrentSession();
           screenShareSession.clearPullAnswerTimer();
           if (!screenShareSession.isAnswerApplied()) {
@@ -187,7 +196,7 @@ screenShareHandler = {
       if ($Util.isEmpty(userName)) {
         return;
       }
-      $('#callername').val("");
+      // $('#callername').val("");
       screenShareImpl.initiate(userName);
     },
 
@@ -198,7 +207,7 @@ screenShareHandler = {
       var guestLink = screenShareImpl.getCurrentSession().getGuestUrl();
       if (!$Util.isEmpty(guestLink)) {
         $Util.copyTextToClipboard(guestLink, function () {
-          alert("Copied successfully!");
+          screenShareUI.addInfoMessage(screenShareConstants.stateClass.SUCCESS, 'Link copied share it with your peer!!')
         });
       }
     },
@@ -264,7 +273,10 @@ screenShareImpl = {
   startCall: function (resp) {
     this._currentSession = new screenShareSession(resp._id, resp.uname, resp.guestId);
     var guestUrl = this._currentSession.getGuestUrl();
-    $('#guestLinkHolder').val(guestUrl);
+    if (!$Util.isEmpty(guestUrl)) {
+      $('#guestLinkHolder').val(guestUrl);
+      screenShareUI.addInfoMessage(screenShareConstants.stateClass.INFO, 'Link has been generated')
+    }
   },
 
   getCurrentSession: function () {
@@ -316,6 +328,15 @@ screenShareImpl = {
   }
 };
 
+screenShareUI =
+{
+  addInfoMessage: function (type, message) {
+    var statusHolder = $('#statusContainer');
+    statusHolder.attr('class', type + ' row infoTxt');
+    statusHolder.find('#statusText').text(message)
+  }
+
+}
 
 // bind UI events
 screenShareImpl.bindEvents();

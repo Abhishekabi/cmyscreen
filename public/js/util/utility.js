@@ -4,7 +4,7 @@ var $Util = {};
 $Util = {
 	isEmpty: function (str) {
 		if (!str) {
-			return false;
+			return true;
 		}
 		return str.trim() === "";
 	},

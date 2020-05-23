@@ -17,7 +17,9 @@ router.get("/:guestId/init", (req, res) => {
             if (callObject.hasGuestSession) {
                 return res.json({ urlerror: "Already a guest joined this session" });
             }
-            res.json(callObject);
+            callObject.updateOne({ $set: { hasGuestSession: true } }).then(() => {
+                res.json(callObject);
+            }).catch((err) => console.log("Error : " + err))
         })
         .catch((err) => console.log("Error : " + err));
 });
